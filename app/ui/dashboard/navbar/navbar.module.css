@@ -5,6 +5,7 @@
     background-color: var(--bgSoft);
     align-items: center;
     justify-content: space-between;
+    box-shadow: 4px 4px 7px aqua;
 }
 
 .title {
