@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const userSchema = new mongoose.Schema(
+const userSchema = new Schema(
   {
     username: {
       type: String,
@@ -17,7 +17,6 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      unique: true,
     },
     img: {
       type: String,
@@ -40,7 +39,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const productSchema = new mongoose.Schema(
+const productSchema = new Schema(
   {
     title: {
       type: String,
@@ -56,15 +55,15 @@ const productSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
-    img: {
-      type: String,
-    },
     stock: {
       type: Number,
       required: true,
       min: 0,
     },
-    taste: {
+    img: {
+      type: String,
+    },
+    color: {
       type: String,
     },
     size: {
