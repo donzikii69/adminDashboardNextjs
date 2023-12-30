@@ -8,8 +8,10 @@ import Link from "next/link";
 const UsersPage = async ({ searchParams }) => {
   //setting query search
   const q = searchParams?.q || "";
+  //atur page dengan dispaly page 1 nya di sini
+  const page = searchParams?.page || 1;
   //test triger dulu mongoDB conenction pake fetchUsers() ini
-  const users = await fetchUsers(q);
+  const { count, users } = await fetchUsers(q, page);
 
   //cek di console nongol gak array nya
   // console.log(users);
@@ -67,7 +69,7 @@ const UsersPage = async ({ searchParams }) => {
           ))}
         </tbody>
       </table>
-      <Pagination />
+      <Pagination count={count} />
     </div>
   );
 };

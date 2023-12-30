@@ -3,8 +3,15 @@ import Search from "@/app/ui/dashboard/search/search";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "@/app/ui/dashboard/products/products.module.css";
+import { fetchProducts } from "@/app/lib/data";
+const ProductPage = async ({ searchParams }) => {
+  //setting query search
+  const q = searchParams?.q || "";
+  //atur page dengan dispaly page 1 nya di sini
+  const page = searchParams?.page || 1;
+  //test triger dulu mongoDB conenction pake fetchProducts() ini
+  const { count, products } = await fetchProducts(q, page);
 
-const ProductPage = () => {
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -25,39 +32,41 @@ const ProductPage = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>
-              <div className={styles.product}>
-                <Image
-                  src="/noproduct.jpg"
-                  alt=""
-                  width={40}
-                  height={40}
-                  className={styles.productImage}
-                />
-                Kopi
-              </div>
-            </td>
-            <td>Desc</td>
-            <td>Rp15000</td>
-            <td>14.02.2024</td>
-            <td>11</td>
-            <td>
-              <div className={styles.buttons}>
-                <Link href="/dashboard/products/test">
-                  <button className={`${styles.button} ${styles.view}`}>
-                    View
+          {products.map((product) => (
+            <tr key={product.id}>
+              <td>
+                <div className={styles.product}>
+                  <Image
+                    src={product.img || "/noproduct.jpg"}
+                    alt=""
+                    width={40}
+                    height={40}
+                    className={styles.productImage}
+                  />
+                  {product.title}
+                </div>
+              </td>
+              <td>{product.desc}</td>
+              <td>Rp{product.price}</td>
+              <td>{product.createdAt?.toDateString()}</td>
+              <td>{product.stock}</td>
+              <td>
+                <div className={styles.buttons}>
+                  <Link href={`/dashboard/products/${product.id}`}>
+                    <button className={`${styles.button} ${styles.view}`}>
+                      View
+                    </button>
+                  </Link>
+                  <button className={`${styles.button} ${styles.delete}`}>
+                    Delete
                   </button>
-                </Link>
-                <button className={`${styles.button} ${styles.delete}`}>
-                  Delete
-                </button>
-              </div>
-            </td>
-          </tr>
+                </div>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
-      <Pagination />
+      <Pagination count={count} />
     </div>
   );
 };
