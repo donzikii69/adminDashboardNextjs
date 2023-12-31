@@ -7,6 +7,7 @@ import { connectToDB } from "./utils";
 import { redirect } from "next/navigation";
 import bcrypt from "bcrypt";
 
+//tambah user :
 export const addUser = async (formData) => {
   const { username, email, password, phone, address, isAdmin, isActive } =
     Object.fromEntries(formData);
@@ -38,6 +39,58 @@ export const addUser = async (formData) => {
   redirect("/dashboard/users");
 };
 
+//update user yang udah ada (update user by id)
+export const updateUser = async (formData) => {
+  const { id, username, email, password, phone, address, isAdmin, isActive } =
+    Object.fromEntries(formData);
+
+  try {
+    //koneksiin ke mongoDB(di oper dari /utils.js)
+    connectToDB();
+
+    const updateFields = {
+      username,
+      email,
+      password,
+      phone,
+      address,
+      isAdmin,
+      isActive,
+    };
+
+    Object.keys(updateFields).forEach(
+      (key) =>
+        (updateFields[key] === "" || undefined) && delete updateFields[key],
+    );
+
+    await User.findByIdAndUpdate(id, updateFields);
+  } catch (err) {
+    console.log(err);
+    throw new Error("Failed to update user");
+  }
+
+  revalidatePath("/dashboard/users");
+  redirect("/dashboard/users");
+};
+
+//delete user
+export const deleteUser = async (formData) => {
+  const { id } = Object.fromEntries(formData);
+
+  try {
+    //koneksiin ke mongoDB(di oper dari /utils.js)
+    connectToDB();
+    //kasih tau DB
+    await User.findByIdAndDelete(id);
+  } catch (err) {
+    console.log(err);
+    throw new Error("Failed to delete User!");
+  }
+
+  revalidatePath("/dashboard/products");
+};
+
+//tambah product ke db
 export const addProduct = async (formData) => {
   const { title, desc, price, stock, taste, size } =
     Object.fromEntries(formData);
@@ -59,6 +112,55 @@ export const addProduct = async (formData) => {
   } catch (err) {
     console.log(err);
     throw new Error("Failed to create product!");
+  }
+
+  revalidatePath("/dashboard/products");
+  redirect("/dashboard/products");
+};
+
+//delete product
+export const deleteProduct = async (formData) => {
+  const { id } = Object.fromEntries(formData);
+
+  try {
+    //koneksiin ke mongoDB(di oper dari /utils.js)
+    connectToDB();
+    //kasih tau DB
+    await Product.findByIdAndDelete(id);
+  } catch (err) {
+    console.log(err);
+    throw new Error("Failed to delete product!");
+  }
+
+  revalidatePath("/dashboard/products");
+};
+
+//update product yang udah ada (update product by id)
+export const updateProduct = async (formData) => {
+  const { id, title, desc, price, stock, taste, size } =
+    Object.fromEntries(formData);
+
+  try {
+    //koneksiin ke mongoDB(di oper dari /utils.js)
+    connectToDB();
+    const updateFields = {
+      title,
+      desc,
+      price,
+      stock,
+      taste,
+      size,
+    };
+
+    Object.keys(updateFields).forEach(
+      (key) =>
+        (updateFields[key] === "" || undefined) && delete updateFields[key],
+    );
+
+    await Product.findByIdAndUpdate(id, updateFields);
+  } catch (err) {
+    console.log(err);
+    throw new Error("Failed to update product");
   }
 
   revalidatePath("/dashboard/products");
