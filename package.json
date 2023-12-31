@@ -1,5 +1,5 @@
 {
-  "name": "nextadmingithubstarter",
+  "name": "admin-dashboard learning with next",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -14,6 +14,7 @@
     "mongodb": "^6.3.0",
     "mongoose": "^8.0.3",
     "next": "14.0.1",
+    "next-auth": "^5.0.0-beta.3",
     "react": "18",
     "react-dom": "18",
     "react-icons": "^4.11.0",
